@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/student/hw3/webserver-files/Queue.c
+Queue.h
+/home/student/hw3/webserver-files/Queue.h
+assert.h
+/home/student/hw3/webserver-files/assert.h
+stdlib.h
+-
+
+/home/student/hw3/webserver-files/Queue.h
+stdbool.h
+/home/student/hw3/webserver-files/stdbool.h
+

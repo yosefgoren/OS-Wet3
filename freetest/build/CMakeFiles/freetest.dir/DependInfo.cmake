@@ -4,8 +4,8 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "/home/student/hw3/webserver-files/Queue.c" "/home/student/freetest/build/CMakeFiles/freetest.dir/home/student/hw3/webserver-files/Queue.c.o"
-  "/home/student/freetest/main.c" "/home/student/freetest/build/CMakeFiles/freetest.dir/main.c.o"
+  "/home/student/hw3/webserver-files/Queue.c" "/home/student/hw3/freetest/build/CMakeFiles/freetest.dir/home/student/hw3/webserver-files/Queue.c.o"
+  "/home/student/hw3/freetest/main.c" "/home/student/hw3/freetest/build/CMakeFiles/freetest.dir/main.c.o"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 

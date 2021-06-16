@@ -62,10 +62,10 @@ RM = /home/student/.local/lib/python2.7/site-packages/cmake/data/bin/cmake -E rm
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/student/freetest
+CMAKE_SOURCE_DIR = /home/student/hw3/freetest
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/student/freetest/build
+CMAKE_BINARY_DIR = /home/student/hw3/freetest/build
 
 # Utility rule file for ExperimentalStart.
 
@@ -90,6 +90,6 @@ CMakeFiles/ExperimentalStart.dir/clean:
 .PHONY : CMakeFiles/ExperimentalStart.dir/clean
 
 CMakeFiles/ExperimentalStart.dir/depend:
-	cd /home/student/freetest/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/student/freetest /home/student/freetest /home/student/freetest/build /home/student/freetest/build /home/student/freetest/build/CMakeFiles/ExperimentalStart.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/student/hw3/freetest/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/student/hw3/freetest /home/student/hw3/freetest /home/student/hw3/freetest/build /home/student/hw3/freetest/build /home/student/hw3/freetest/build/CMakeFiles/ExperimentalStart.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/ExperimentalStart.dir/depend
 

@@ -4,7 +4,8 @@ project(freetest VERSION 0.1.0)
 include(CTest)
 enable_testing()
 
-add_executable(freetest main.c /webserver-files/Queue.c)
+add_executable(freetest main.c ../webserver-files/Queue.c)
+add_executable(queuetest quick.c ../webserver-files/Queue.c)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

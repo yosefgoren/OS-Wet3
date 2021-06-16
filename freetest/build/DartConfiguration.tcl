@@ -4,8 +4,8 @@
 
 
 # Configuration directories and files
-SourceDirectory: /home/student/freetest
-BuildDirectory: /home/student/freetest/build
+SourceDirectory: /home/student/hw3/freetest
+BuildDirectory: /home/student/hw3/freetest/build
 
 # Where to place the cost data store
 CostDataFile: 
@@ -26,7 +26,7 @@ SubmitURL: http://
 NightlyStartTime: 00:00:00 EDT
 
 # Commands for the build/test/submit cycle
-ConfigureCommand: "/home/student/.local/lib/python2.7/site-packages/cmake/data/bin/cmake" "/home/student/freetest"
+ConfigureCommand: "/home/student/.local/lib/python2.7/site-packages/cmake/data/bin/cmake" "/home/student/hw3/freetest"
 MakeCommand: /home/student/.local/lib/python2.7/site-packages/cmake/data/bin/cmake --build . --config "${CTEST_CONFIGURATION_TYPE}" -- -i
 DefaultCTestConfigurationType: Release
 

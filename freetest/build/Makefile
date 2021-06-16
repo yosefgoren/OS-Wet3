@@ -67,10 +67,10 @@ RM = /home/student/.local/lib/python2.7/site-packages/cmake/data/bin/cmake -E rm
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/student/freetest
+CMAKE_SOURCE_DIR = /home/student/hw3/freetest
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/student/freetest/build
+CMAKE_BINARY_DIR = /home/student/hw3/freetest/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -111,7 +111,7 @@ package/fast: package
 # Special rule for the target package_source
 package_source:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Run CPack packaging tool for source..."
-	/home/student/.local/lib/python2.7/site-packages/cmake/data/bin/cpack --config ./CPackSourceConfig.cmake /home/student/freetest/build/CPackSourceConfig.cmake
+	/home/student/.local/lib/python2.7/site-packages/cmake/data/bin/cpack --config ./CPackSourceConfig.cmake /home/student/hw3/freetest/build/CPackSourceConfig.cmake
 .PHONY : package_source
 
 # Special rule for the target package_source
@@ -132,9 +132,9 @@ test/fast: test
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/freetest/build/CMakeFiles /home/student/freetest/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/hw3/freetest/build/CMakeFiles /home/student/hw3/freetest/build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/freetest/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/hw3/freetest/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -436,6 +436,19 @@ ExperimentalBuild/fast:
 .PHONY : ExperimentalBuild/fast
 
 #=============================================================================
+# Target rules for targets named queuetest
+
+# Build rule for target.
+queuetest: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 queuetest
+.PHONY : queuetest
+
+# fast build rule for target.
+queuetest/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/queuetest.dir/build.make CMakeFiles/queuetest.dir/build
+.PHONY : queuetest/fast
+
+#=============================================================================
 # Target rules for targets named NightlyConfigure
 
 # Build rule for target.
@@ -546,6 +559,7 @@ home/student/hw3/webserver-files/Queue.o: home/student/hw3/webserver-files/Queue
 # target to build an object file
 home/student/hw3/webserver-files/Queue.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/freetest.dir/build.make CMakeFiles/freetest.dir/home/student/hw3/webserver-files/Queue.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/queuetest.dir/build.make CMakeFiles/queuetest.dir/home/student/hw3/webserver-files/Queue.c.o
 .PHONY : home/student/hw3/webserver-files/Queue.c.o
 
 home/student/hw3/webserver-files/Queue.i: home/student/hw3/webserver-files/Queue.c.i
@@ -555,6 +569,7 @@ home/student/hw3/webserver-files/Queue.i: home/student/hw3/webserver-files/Queue
 # target to preprocess a source file
 home/student/hw3/webserver-files/Queue.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/freetest.dir/build.make CMakeFiles/freetest.dir/home/student/hw3/webserver-files/Queue.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/queuetest.dir/build.make CMakeFiles/queuetest.dir/home/student/hw3/webserver-files/Queue.c.i
 .PHONY : home/student/hw3/webserver-files/Queue.c.i
 
 home/student/hw3/webserver-files/Queue.s: home/student/hw3/webserver-files/Queue.c.s
@@ -564,6 +579,7 @@ home/student/hw3/webserver-files/Queue.s: home/student/hw3/webserver-files/Queue
 # target to generate assembly for a file
 home/student/hw3/webserver-files/Queue.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/freetest.dir/build.make CMakeFiles/freetest.dir/home/student/hw3/webserver-files/Queue.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/queuetest.dir/build.make CMakeFiles/queuetest.dir/home/student/hw3/webserver-files/Queue.c.s
 .PHONY : home/student/hw3/webserver-files/Queue.c.s
 
 main.o: main.c.o
@@ -592,6 +608,33 @@ main.s: main.c.s
 main.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/freetest.dir/build.make CMakeFiles/freetest.dir/main.c.s
 .PHONY : main.c.s
+
+quick.o: quick.c.o
+
+.PHONY : quick.o
+
+# target to build an object file
+quick.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/queuetest.dir/build.make CMakeFiles/queuetest.dir/quick.c.o
+.PHONY : quick.c.o
+
+quick.i: quick.c.i
+
+.PHONY : quick.i
+
+# target to preprocess a source file
+quick.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/queuetest.dir/build.make CMakeFiles/queuetest.dir/quick.c.i
+.PHONY : quick.c.i
+
+quick.s: quick.c.s
+
+.PHONY : quick.s
+
+# target to generate assembly for a file
+quick.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/queuetest.dir/build.make CMakeFiles/queuetest.dir/quick.c.s
+.PHONY : quick.c.s
 
 # Help Target
 help:
@@ -633,12 +676,16 @@ help:
 	@echo "... NightlyTest"
 	@echo "... NightlyUpdate"
 	@echo "... freetest"
+	@echo "... queuetest"
 	@echo "... home/student/hw3/webserver-files/Queue.o"
 	@echo "... home/student/hw3/webserver-files/Queue.i"
 	@echo "... home/student/hw3/webserver-files/Queue.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... quick.o"
+	@echo "... quick.i"
+	@echo "... quick.s"
 .PHONY : help
 
 

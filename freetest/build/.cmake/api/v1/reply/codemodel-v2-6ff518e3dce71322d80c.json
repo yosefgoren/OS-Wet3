@@ -42,7 +42,8 @@
 						25,
 						26,
 						27,
-						28
+						28,
+						29
 					]
 				}
 			],
@@ -85,7 +86,8 @@
 						25,
 						26,
 						27,
-						28
+						28,
+						29
 					]
 				}
 			],
@@ -293,6 +295,13 @@
 					"jsonFile" : "target-freetest-Debug-bfa2431ac2839a8b2db3.json",
 					"name" : "freetest",
 					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "queuetest::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-queuetest-Debug-047ab4b909095e8bd775.json",
+					"name" : "queuetest",
+					"projectIndex" : 0
 				}
 			]
 		}
@@ -300,8 +309,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "/home/student/freetest/build",
-		"source" : "/home/student/freetest"
+		"build" : "/home/student/hw3/freetest/build",
+		"source" : "/home/student/hw3/freetest"
 	},
 	"version" : 
 	{

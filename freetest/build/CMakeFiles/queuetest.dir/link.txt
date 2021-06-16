@@ -1,0 +1,1 @@
+/usr/bin/x86_64-linux-gnu-gcc-7 -g -rdynamic CMakeFiles/queuetest.dir/quick.c.o CMakeFiles/queuetest.dir/home/student/hw3/webserver-files/Queue.c.o -o queuetest 
