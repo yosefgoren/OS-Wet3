@@ -2,8 +2,6 @@
 #define QUEUE
 #include "stdbool.h"
 
-#define QUEUE_NO_MAX_SIZE -1
-
 typedef struct Queue_t Queue;
 typedef int QueueItemType;
 
