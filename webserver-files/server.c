@@ -1,6 +1,9 @@
 #include "segel.h"
 #include "request.h"
 #include <pthread.h>
+#include "Queue.h"
+#include <stdbool.h>
+
 // 
 // server.c: A very, very simple web server
 //
@@ -12,7 +15,7 @@
 //
 #define NUM_THREADS 4
 
-IntQueue* todo_fds;
+Queue* todo_fds;
 pthread_t* threads;
 
 // HW3: Parse the new arguments too
@@ -25,9 +28,16 @@ void getargs(int *port, int argc, char *argv[])
     *port = atoi(argv[1]);
 }
 
-void* slaveAway(void*){
-	
-		
+void* slaveAway(void* null_arg){
+	while(true){
+		//secure access to 'todo_fds' before accessing it.
+		if(emptyQ(todo_fds)){
+			//go to sleep. on wake up, continue to new loop itteration:
+
+		} else {
+			//dequeue the top request, and server it:
+		}
+	}
 		
 	return NULL;
 }
@@ -41,7 +51,6 @@ int main(int argc, char *argv[])
     
     todo_fds = intQueueInit();
 	
-		
     // 
     // HW3: Create some threads...
     //
@@ -51,10 +60,10 @@ int main(int argc, char *argv[])
 	}
 
     listenfd = Open_listenfd(port);
-    while (1) {
-	clientlen = sizeof(clientaddr);
-	connfd = Accept(listenfd, (SA *)&clientaddr, (socklen_t *) &clientlen);
-	todo_fds->append(connfd);
+    while (true) {
+		clientlen = sizeof(clientaddr);
+		connfd = Accept(listenfd, (SA *)&clientaddr, (socklen_t *) &clientlen);
+		todo_fds->append(connfd);
 
 	// 
 	// HW3: In general, don't handle the request in the main thread.

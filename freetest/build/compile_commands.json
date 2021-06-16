@@ -1,0 +1,12 @@
+[
+{
+  "directory": "/home/student/freetest/build",
+  "command": "/usr/bin/x86_64-linux-gnu-gcc-7   -g -o CMakeFiles/freetest.dir/main.c.o -c /home/student/freetest/main.c",
+  "file": "/home/student/freetest/main.c"
+},
+{
+  "directory": "/home/student/freetest/build",
+  "command": "/usr/bin/x86_64-linux-gnu-gcc-7   -g -o CMakeFiles/freetest.dir/home/student/hw3/webserver-files/Queue.c.o -c /home/student/hw3/webserver-files/Queue.c",
+  "file": "/home/student/hw3/webserver-files/Queue.c"
+}
+]
