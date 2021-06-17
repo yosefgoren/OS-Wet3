@@ -14,9 +14,12 @@
 // Most of the work is done within routines written in request.c
 //
 #define NUM_THREADS 4
+#define QUEUE_SIZE 4
 
-Queue* todo_fds;
-pthread_t* threads;
+Queue* shared_queue;
+pthread_mutex_t m;
+pthread_cond_t empty_cond;
+pthread_cond_t full_cond;
 
 // HW3: Parse the new arguments too
 void getargs(int *port, int argc, char *argv[])
@@ -28,54 +31,75 @@ void getargs(int *port, int argc, char *argv[])
     *port = atoi(argv[1]);
 }
 
-void* slaveAway(void* null_arg){
-	while(true){
-		//secure access to 'todo_fds' before accessing it.
-		if(emptyQ(todo_fds)){
-			//go to sleep. on wake up, continue to new loop itteration:
+void* consumeRequests(void* null_arg)
+{
+    int connfd;
 
-		} else {
-			//dequeue the top request, and server it:
-		}
-	}
+    while (1) {
+        pthread_mutex_lock(&m);
+        while (emptyQ(shared_queue)) {
+            pthread_cond_wait(&empty_cond, &m);
+        }
+
+        connfd = dequeueQ(shared_queue); //critical code
+        pthread_cond_signal(&full_cond);
+        
+        pthread_mutex_unlock(&m);
+
+		requestHandle(connfd);
+		Close(connfd);
+    }
+    return NULL;
+}
+
+void produceRequests(int argc, char** argv)
+{
+	int listenfd, connfd, port, clientlen;
+    struct sockaddr_in clientaddr;
+    
+	getargs(&port, argc, argv);
+    listenfd = Open_listenfd(port);
+
+    while (true) {	
+		clientlen = sizeof(clientaddr);
+		connfd = Accept(listenfd, (SA *)&clientaddr, (socklen_t *) &clientlen);
 		
-	return NULL;
+		pthread_mutex_lock(&m);
+		while (fullQ(shared_queue)) {
+            pthread_cond_wait(&full_cond, &m);
+        }
+        
+		enqueueQ(shared_queue, connfd); //critical code!  (>_<)
+        pthread_cond_signal(&empty_cond);
+        
+        pthread_mutex_unlock(&m);
+	}
 }
 
 int main(int argc, char *argv[])
-{
-    int listenfd, connfd, port, clientlen;
-    struct sockaddr_in clientaddr;
+{    
+	int num_threads = NUM_THREADS, queue_size = QUEUE_SIZE;
 
-    getargs(&port, argc, argv);
-    
-    todo_fds = intQueueInit();
-	
-    // 
-    // HW3: Create some threads...
-    //
-	threads = (pthread_t*)malloc(sizeof(pthread_t)*NUM_THREADS);
-	for(int i = 0; i < NUM_THREADS; ++i){
-		pthread_create(threads+i, NULL, slaveAway, NULL);
-	}
+	//create the threads array:
+    pthread_t *threads = (pthread_t*)malloc(sizeof(pthread_t)*num_threads);
+    //initialize the queue:
+    shared_queue = initQ(queue_size);
 
-    listenfd = Open_listenfd(port);
-    while (true) {
-		clientlen = sizeof(clientaddr);
-		connfd = Accept(listenfd, (SA *)&clientaddr, (socklen_t *) &clientlen);
-		todo_fds->append(connfd);
-
-	// 
-	// HW3: In general, don't handle the request in the main thread.
-	// Save the relevant info in a buffer and have one of the worker threads 
-	// do the work. 
-	// 
-	
-	//OLD IMPL: 
-	//	requestHandle(connfd);
-	//	Close(connfd);
+    //start all of the threads:
+    for(int i = 0; i < num_threads; ++i){
+        pthread_create(threads+i, NULL, consumeRequests, NULL);
     }
 
+	produceRequests(argc, argv);
+
+	for (int i = 0; i < num_threads; ++i) {
+		pthread_join(threads[i], NULL);
+    }
+    //free the threads array:
+    free(threads);
+    //destroy the queue:
+    destroyQ(shared_queue);
+    return 0;
 }
 
 
