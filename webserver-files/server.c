@@ -4,6 +4,7 @@
 #include "Queue.h"
 #include <stdbool.h>
 #include <string.h>
+#include <assert.h>
 
 
 // To run:
@@ -107,7 +108,7 @@ void produceRequests(int port, OverloadPolicy policy)
                 break;
             case DROP_HEAD:
                 //the 'top' request is ignored:
-                dequeueQ(shared_queue);
+                Close(dequeueQ(shared_queue));
                 break;
             case DROP_RAND:
                 //a random 25% of the items in the queue are dropped:
