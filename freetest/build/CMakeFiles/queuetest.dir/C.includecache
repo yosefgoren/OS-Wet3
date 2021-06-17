@@ -6,12 +6,24 @@
 
 #IncludeRegexTransform: 
 
+/home/student/hw3/freetest/quick.c
+stdio.h
+-
+stdlib.h
+-
+../webserver-files/Queue.h
+/home/student/hw3/webserver-files/Queue.h
+assert.h
+/home/student/hw3/freetest/assert.h
+
 /home/student/hw3/webserver-files/Queue.c
 Queue.h
 /home/student/hw3/webserver-files/Queue.h
 assert.h
 /home/student/hw3/webserver-files/assert.h
 stdlib.h
+-
+stdio.h
 -
 
 /home/student/hw3/webserver-files/Queue.h

@@ -27,6 +27,7 @@ int main(){
 	assert(emptyQ(q));
 
 	destroyQ(q);
+	printf("test successfull!\n");
 	return 0;
 }
 
