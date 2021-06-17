@@ -63,7 +63,8 @@ void test3(){
 	enqueueQ(q, 50);
 	enqueueQ(q, 25);
 	dropRandQuarter(q);
-	assert(q->size);
+	assert(q->size == 3);
+	
 }
 
 int main(){
