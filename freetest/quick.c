@@ -3,27 +3,33 @@
 #include "../webserver-files/Queue.h"
 #include "assert.h"
 
+request mk(int connfd){
+	request res;
+	res.connfd = connfd;
+	return res;
+}
+
 void test1(){
 	Queue* q = initQ(3);
 	assert(emptyQ(q));
 	
-	enqueueQ(q, 5);
-	enqueueQ(q, 1);
+	enqueueQ(q, mk(5));
+	enqueueQ(q, mk(1));
 	assert(!emptyQ(q));
-	assert(dequeueQ(q) == 5);
+	assert((dequeueQ(q).connfd == 5));
 	assert(!fullQ(q));
 	
-	enqueueQ(q, 4);
-	enqueueQ(q,3);
+	enqueueQ(q, mk(4));
+	enqueueQ(q,mk(3));
 	assert(fullQ(q));
 
-	assert(dequeueQ(q) == 1);
-	assert(dequeueQ(q) == 4);
+	assert((dequeueQ(q).connfd == 1));
+	assert((dequeueQ(q).connfd == 4));
 	
 	assert(!emptyQ(q));
 	assert(!fullQ(q));
 	
-	assert(dequeueQ(q) == 3);
+	assert((dequeueQ(q).connfd == 3));
 	assert(emptyQ(q));
 
 	destroyQ(q);
@@ -33,38 +39,60 @@ void test1(){
 void test2(){
 	Queue* q = initQ(4);
 	assert(emptyQ(q));
-	enqueueQ(q, 200);
-	enqueueQ(q, 100);
-	enqueueQ(q, 50);
-	enqueueQ(q, 25);
+	enqueueQ(q, mk(200));
+	enqueueQ(q, mk(100));
+	enqueueQ(q, mk(50));
+	enqueueQ(q, mk(25));
 	assert(fullQ(q));
-	assert(dequeueQ(q) == 200);
-	assert(dequeueQ(q) == 100);
-	assert(dequeueQ(q) == 50);
-	assert(dequeueQ(q) == 25);
+	assert((dequeueQ(q).connfd == 200));
+	assert((dequeueQ(q).connfd == 100));
+	assert((dequeueQ(q).connfd == 50));
+	assert((dequeueQ(q).connfd == 25));
 	assert(emptyQ(q));
 
-	enqueueQ(q, 10);
-	enqueueQ(q, 20);
-	assert(dequeueQ(q) == 10);
-	enqueueQ(q, 30);
-	enqueueQ(q, 40);
-	assert(dequeueQ(q) == 20);
+	enqueueQ(q, mk(10));
+	enqueueQ(q, mk(20));
+	assert((dequeueQ(q).connfd == 10));
+	enqueueQ(q, mk(30));
+	enqueueQ(q, mk(40));
+	assert((dequeueQ(q).connfd == 20));
 	destroyQ(q);
 	
 	printf("test2 success!\n");
 }
 
+#define DOPRINTS 0
+#define PRINTQ(queue) if(DOPRINTS) printQ(queue);
 void test3(){
+	srand(30);
 	Queue* q = initQ(4);
 	assert(emptyQ(q));
-	enqueueQ(q, 200);
-	enqueueQ(q, 100);
-	enqueueQ(q, 50);
-	enqueueQ(q, 25);
+	enqueueQ(q, mk(200));
+	enqueueQ(q, mk(100));
+	enqueueQ(q, mk(50));
+	enqueueQ(q, mk(25));
+	PRINTQ(q);
 	dropRandQuarter(q);
-	assert(q->size == 3);
-	
+	PRINTQ(q);
+	enqueueQ(q, mk(1));
+	assert(fullQ(q));
+	destroyQ(q);
+
+	Queue* p = initQ(3);
+	enqueueQ(p, mk(2));
+	PRINTQ(p);
+	dropRandQuarter(p);
+	PRINTQ(p);
+	assert(emptyQ(p));
+	enqueueQ(p, mk(1));
+	enqueueQ(p, mk(2));
+	enqueueQ(p, mk(3));
+	PRINTQ(p);
+	dropRandQuarter(p);
+	PRINTQ(p);
+	enqueueQ(p, mk(4));
+	assert(fullQ(q));
+	printf("test3 success!\n");
 }
 
 int main(){

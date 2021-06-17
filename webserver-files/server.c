@@ -14,8 +14,14 @@
 // Most of the work is done within routines written in request.c
 //
 
-#define NUM_THREADS 2
-#define QUEUE_SIZE 2
+#define DBPRINT
+
+#ifdef DBPRINT
+#define YELL(s) printf(s;
+#endif
+#ifndef DBPRINT
+#define YELL(s) ;
+#endif
 
 typedef enum OverloadPolicy_t{
     BLOCK,
@@ -28,6 +34,13 @@ Queue* shared_queue;
 pthread_mutex_t m;
 pthread_cond_t empty_cond;
 pthread_cond_t full_cond;
+
+request makeRequest(int connfd, struct timeval arrival){
+    request res;
+    res.connfd = connfd;
+    res.arrival = arrival;
+    return res;
+}
 
 // HW3: Parse the new arguments too
 void getargs(int *port, int* num_threads, int* queue_size, OverloadPolicy* policy,int argc, char *argv[])
@@ -59,21 +72,21 @@ void getargs(int *port, int* num_threads, int* queue_size, OverloadPolicy* polic
 
 void* consumeRequests(void* null_arg)
 {
-    int connfd;
-
     while (1) {
         pthread_mutex_lock(&m);
         while (emptyQ(shared_queue)) {
             pthread_cond_wait(&empty_cond, &m);
         }
 
-        connfd = dequeueQ(shared_queue); //critical code
+        request req = dequeueQ(shared_queue); //critical code
+        gettimeofday(&req.dispatch, NULL);
+
         pthread_cond_signal(&full_cond);
         
         pthread_mutex_unlock(&m);
 
-		requestHandle(connfd);
-		Close(connfd);
+		requestHandle(req);
+		Close(req.connfd);
     }
     return NULL;
 }
@@ -87,14 +100,16 @@ void produceRequests(int port, OverloadPolicy policy)
 
     while (true) {	
 		clientlen = sizeof(clientaddr);
-		connfd = Accept(listenfd, (SA *)&clientaddr, (socklen_t *) &clientlen);
+		struct timeval arrival_time;
+        connfd = Accept(listenfd, (SA *)&clientaddr, (socklen_t *) &clientlen);
+        gettimeofday(&arrival_time, NULL);
 
 		pthread_mutex_lock(&m);
-
+        
         if(policy == DROP_TAIL && fullQ(shared_queue)){
             pthread_mutex_unlock(&m);
             Close(connfd);
-            break;
+            continue;
         }
 
         if(fullQ(shared_queue)){
@@ -108,7 +123,7 @@ void produceRequests(int port, OverloadPolicy policy)
                 break;
             case DROP_HEAD:
                 //the 'top' request is ignored:
-                Close(dequeueQ(shared_queue));
+                Close(dequeueQ(shared_queue).connfd);
                 break;
             case DROP_RAND:
                 //a random 25% of the items in the queue are dropped:
@@ -120,7 +135,7 @@ void produceRequests(int port, OverloadPolicy policy)
         while(fullQ(shared_queue))
             pthread_cond_wait(&full_cond, &m);
 
-		enqueueQ(shared_queue, connfd); //critical code!  (>_<)
+		enqueueQ(shared_queue, makeRequest(connfd, arrival_time)); //critical code!  (>_<)
         pthread_cond_signal(&empty_cond);
         
         pthread_mutex_unlock(&m);

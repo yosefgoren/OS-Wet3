@@ -3,7 +3,9 @@
 
 CMakeFiles/queuetest.dir/home/student/hw3/webserver-files/Queue.c.o: /home/student/hw3/webserver-files/Queue.c
 CMakeFiles/queuetest.dir/home/student/hw3/webserver-files/Queue.c.o: /home/student/hw3/webserver-files/Queue.h
+CMakeFiles/queuetest.dir/home/student/hw3/webserver-files/Queue.c.o: /home/student/hw3/webserver-files/request.h
 
 CMakeFiles/queuetest.dir/quick.c.o: ../quick.c
 CMakeFiles/queuetest.dir/quick.c.o: /home/student/hw3/webserver-files/Queue.h
+CMakeFiles/queuetest.dir/quick.c.o: /home/student/hw3/webserver-files/request.h
 

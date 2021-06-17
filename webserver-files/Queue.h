@@ -1,9 +1,10 @@
 #ifndef QUEUE
 #define QUEUE
 #include "stdbool.h"
+#include "request.h"
 
 typedef struct Queue_t Queue;
-typedef int QueueItemType;
+typedef struct request_t QueueItemType;
 
 Queue* initQ(int max_size);
 void enqueueQ(Queue* queue, QueueItemType item);

@@ -31,4 +31,10 @@ stdio.h
 /home/student/hw3/webserver-files/Queue.h
 stdbool.h
 /home/student/hw3/webserver-files/stdbool.h
+request.h
+/home/student/hw3/webserver-files/request.h
+
+/home/student/hw3/webserver-files/request.h
+sys/time.h
+-
 
