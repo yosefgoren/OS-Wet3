@@ -5,4 +5,5 @@ CMakeFiles/freetest.dir/home/student/hw3/webserver-files/Queue.c.o: /home/studen
 CMakeFiles/freetest.dir/home/student/hw3/webserver-files/Queue.c.o: /home/student/hw3/webserver-files/Queue.h
 
 CMakeFiles/freetest.dir/main.c.o: ../main.c
+CMakeFiles/freetest.dir/main.c.o: /home/student/hw3/webserver-files/Queue.h
 

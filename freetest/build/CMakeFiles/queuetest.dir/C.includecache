@@ -16,16 +16,6 @@ stdlib.h
 assert.h
 /home/student/hw3/freetest/assert.h
 
-/home/student/hw3/webserver-files/Queue.c
-Queue.h
-/home/student/hw3/webserver-files/Queue.h
-assert.h
-/home/student/hw3/webserver-files/assert.h
-stdlib.h
--
-stdio.h
--
-
 /home/student/hw3/webserver-files/Queue.h
 stdbool.h
 /home/student/hw3/webserver-files/stdbool.h

@@ -1,22 +1,22 @@
 [
 {
   "directory": "/home/student/hw3/freetest/build",
-  "command": "/usr/bin/x86_64-linux-gnu-gcc-7   -g -g -o CMakeFiles/freetest.dir/main.c.o -c /home/student/hw3/freetest/main.c",
+  "command": "/usr/bin/x86_64-linux-gnu-gcc-7   -g -pthread -g -o CMakeFiles/freetest.dir/main.c.o -c /home/student/hw3/freetest/main.c",
   "file": "/home/student/hw3/freetest/main.c"
 },
 {
   "directory": "/home/student/hw3/freetest/build",
-  "command": "/usr/bin/x86_64-linux-gnu-gcc-7   -g -g -o CMakeFiles/freetest.dir/home/student/hw3/webserver-files/Queue.c.o -c /home/student/hw3/webserver-files/Queue.c",
+  "command": "/usr/bin/x86_64-linux-gnu-gcc-7   -g -pthread -g -o CMakeFiles/freetest.dir/home/student/hw3/webserver-files/Queue.c.o -c /home/student/hw3/webserver-files/Queue.c",
   "file": "/home/student/hw3/webserver-files/Queue.c"
 },
 {
   "directory": "/home/student/hw3/freetest/build",
-  "command": "/usr/bin/x86_64-linux-gnu-gcc-7   -g -g -o CMakeFiles/queuetest.dir/quick.c.o -c /home/student/hw3/freetest/quick.c",
+  "command": "/usr/bin/x86_64-linux-gnu-gcc-7   -g -pthread -g -o CMakeFiles/queuetest.dir/quick.c.o -c /home/student/hw3/freetest/quick.c",
   "file": "/home/student/hw3/freetest/quick.c"
 },
 {
   "directory": "/home/student/hw3/freetest/build",
-  "command": "/usr/bin/x86_64-linux-gnu-gcc-7   -g -g -o CMakeFiles/queuetest.dir/home/student/hw3/webserver-files/Queue.c.o -c /home/student/hw3/webserver-files/Queue.c",
+  "command": "/usr/bin/x86_64-linux-gnu-gcc-7   -g -pthread -g -o CMakeFiles/queuetest.dir/home/student/hw3/webserver-files/Queue.c.o -c /home/student/hw3/webserver-files/Queue.c",
   "file": "/home/student/hw3/webserver-files/Queue.c"
 }
 ]
