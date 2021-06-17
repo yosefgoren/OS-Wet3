@@ -36,18 +36,17 @@ static void dropAtIndices(Queue* queue, bool* should_drop){
     node current = queue->oldest;
     for(int i = 0; i < queue->size; ++i){
         if(should_drop[i]){
-            if(current == queue->oldest){
+            if(current == queue->oldest)
                 queue->oldest = current->next;
-            } else {
+            else
                 current->prior->next = current->next;
-            }
-            if(current == queue->newest){
+            if(current == queue->newest)
                 queue->newest = current->prior;
-            } else {
+            else
                 current->next->prior = current->prior;
-            }
 
             free(current);
+            --queue->size;
         }
         current = current->next;
     }
@@ -71,12 +70,18 @@ static void markRandomIndices(bool* array, int array_size, int num_to_mark){
     }
 }
 
+static int quarterRoundUp(int value){
+    if(((value >>2 ) << 2) == value)
+        return value/4;
+    return value/4+1;
+}
+
 void dropRandQuarter(Queue* queue){
     CHECK_NULL(queue);
     if(emptyQ(queue))
         return;
     bool should_drop[queue->size];
-    markRandomIndices(should_drop, queue->size, queue->size/4);
+    markRandomIndices(should_drop, queue->size, quarterRoundUp(queue->size));
     dropAtIndices(queue, should_drop);
 }
 
