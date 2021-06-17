@@ -11,5 +11,7 @@ QueueItemType dequeueQ(Queue* queue);
 bool emptyQ(Queue* queue);
 bool fullQ(Queue* queue);
 void destroyQ(Queue* queue);
+void dropRandQuarter(Queue* queue);
+void printQ(Queue* queue);
 
 #endif

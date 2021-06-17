@@ -25,6 +25,61 @@ struct Queue_t{
     int max_size; 
 };
 
+/**
+ * the size of the 'should_drop' array should be the size of the queue, for each index it mark whether 
+ * the item in that same index should be dropped from the queue (in relation to the initial state of 'queue').
+ */
+static void dropAtIndices(Queue* queue, bool* should_drop){
+    CHECK_NULL(queue);
+    CHECK_NULL(should_drop);
+
+    node current = queue->oldest;
+    for(int i = 0; i < queue->size; ++i){
+        if(should_drop[i]){
+            if(current == queue->oldest){
+                queue->oldest = current->next;
+            } else {
+                current->prior->next = current->next;
+            }
+            if(current == queue->newest){
+                queue->newest = current->prior;
+            } else {
+                current->next->prior = current->prior;
+            }
+
+            free(current);
+        }
+        current = current->next;
+    }
+}
+
+/**
+ * fills the array with boolean values s.t. 'num_to_mark' of them are true, and the rest are false.
+ * the indices of the true values are chosen at random, with even distribution.
+ */
+static void markRandomIndices(bool* array, int array_size, int num_to_mark){
+    CHECK_NULL(array);
+    for(int i = 0; i < array_size; ++i)
+        array[i] = false;
+
+    while(num_to_mark > 0){
+        int rand_index = random()%array_size;
+        if(array[rand_index])
+            continue;
+        array[rand_index] = true;
+        --num_to_mark;
+    }
+}
+
+void dropRandQuarter(Queue* queue){
+    CHECK_NULL(queue);
+    if(emptyQ(queue))
+        return;
+    bool should_drop[queue->size];
+    markRandomIndices(should_drop, queue->size, queue->size/4);
+    dropAtIndices(queue, should_drop);
+}
+
 Queue* initQ(int max_size){
     ASSERT(max_size >= 0, "max_size parameter must be non-negaitve.");
     Queue* res = (Queue*)malloc(sizeof(Queue));
@@ -95,4 +150,13 @@ void destroyQ(Queue* queue){
     while(!emptyQ(queue))
         dequeueQ(queue);
     free(queue);
+}
+
+void printQ(Queue* queue){
+    node current = queue->newest;
+    while(current != NULL){
+        printf("%d ", current->data);
+        current = current->prior;
+    }
+    printf("\n");
 }
