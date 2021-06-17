@@ -31,7 +31,6 @@ void test1(){
 }
 
 void test2(){
-	static const int numq = 10;
 	Queue* q = initQ(4);
 	assert(emptyQ(q));
 	enqueueQ(q, 200);
@@ -56,9 +55,21 @@ void test2(){
 	printf("test2 success!\n");
 }
 
+void test3(){
+	Queue* q = initQ(4);
+	assert(emptyQ(q));
+	enqueueQ(q, 200);
+	enqueueQ(q, 100);
+	enqueueQ(q, 50);
+	enqueueQ(q, 25);
+	dropRandQuarter(q);
+	assert(q->size);
+}
+
 int main(){
 	test1();
 	test2();
+	test3();
 
 	return 0;
 }
