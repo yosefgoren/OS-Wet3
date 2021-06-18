@@ -82,6 +82,15 @@ pid_t Wait(int *status)
 }
 /* $end wait */
 
+/* $begin waitpid */
+pid_t WaitPid(pid_t pid, int *status, int options)
+{
+    if ((pid = waitpid(pid, status, options)) < 0)
+        unix_error("Wait error");
+    return pid;
+}
+/* $end waitpid */
+
 /********************************
  * Wrappers for Unix I/O routines
  ********************************/
@@ -566,7 +575,7 @@ double Gettimeofday()
         app_error("gettimeofday error");
     }
 
-    return (double) ((double)t.tv_sec + (double)t.tv_usec / 1e3);
+    return (double) ((double)t.tv_sec + (double)t.tv_usec / 1e6);
 }
 
 

@@ -95,6 +95,7 @@ void* consumeRequests(void* arg_tid)
         request req = dequeueQ(shared_queue); //critical code
         SHOWQ("consumeRequests: finished dequeuing");
         Gettimeofday(&req.dispatch, NULL);
+        req.dispatch -= req.arrival;
 
         pthread_cond_signal(&full_cond);
         

@@ -34,6 +34,25 @@ void requestError(int fd, char *cause, char *errnum, char *shortmsg, char *longm
    printf("%s", buf);
 
    writeStatistics(buf, req, thread_data);
+   // sprintf(buf, "%sStat-req-arrival: %f\r\n", buf, req.arrival);
+   // Rio_writen(fd, buf, strlen(buf));
+   // printf("%s", buf);
+   // sprintf(buf, "%sStat-req-dispatch: %f\r\n", buf, req.dispatch);
+   // Rio_writen(fd, buf, strlen(buf));
+   // printf("%s", buf);
+   
+   // sprintf(buf, "%sStat-thread-id: %d\r\n", buf, thread_data->id);
+   // Rio_writen(fd, buf, strlen(buf));
+   // printf("%s", buf);
+   // sprintf(buf, "%sStat-thread-count: %d\r\n", buf, thread_data->num_http_handled);
+   // Rio_writen(fd, buf, strlen(buf));
+   // printf("%s", buf);
+   // sprintf(buf, "%sStat-thread-static: %d\r\n", buf, thread_data->num_static_handled);
+   // Rio_writen(fd, buf, strlen(buf));
+   // printf("%s", buf);
+   // sprintf(buf, "%sStat-thread-dynamic: %d\r\n", buf, thread_data->num_dynamic_handled);
+   // Rio_writen(fd, buf, strlen(buf));
+   // printf("%s", buf);
 
    sprintf(buf, "Content-Type: text/html\r\n");
    Rio_writen(fd, buf, strlen(buf));
@@ -133,15 +152,16 @@ void requestServeDynamic(int fd, char *filename, char *cgiargs, request req, Thr
    writeStatistics(buf, req, thread_data);
 
    Rio_writen(fd, buf, strlen(buf));
-
-   if (Fork() == 0) {
+   int pid = Fork();
+   if (pid == 0) {
       /* Child process */
       Setenv("QUERY_STRING", cgiargs, 1);
       /* When the CGI process writes to stdout, it will instead go to the socket */
       Dup2(fd, STDOUT_FILENO);
       Execve(filename, emptylist, environ);
    }
-   Wait(NULL);
+   WaitPid(pid, NULL, 0);
+   //Wait(NULL);
 }
 
 
