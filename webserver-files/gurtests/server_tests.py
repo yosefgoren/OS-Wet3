@@ -93,7 +93,7 @@ class RequestsTest(unittest.TestCase):
         fail_expected_tasks = []
         thread_stats = [{'count': 0, 'dyn': 0, 'static': 0} for _ in range(self.thread_count)]
         expected_error_count = total_reqs - self.max_reqs + ((-(total_reqs - self.max_reqs)) % self.per_drop_size)
-        expected_average_dispatch =  DYNAMIC_REQ_TIME * (float(total_reqs - expected_error_count) / self.thread_count) / 2
+        #expected_average_dispatch =  DYNAMIC_REQ_TIME * (float(total_reqs - expected_error_count) / self.thread_count) / 2
         if self.policy == 'random':
             for _ in range(total_reqs):
                 task = asyncio.ensure_future(self.make_req(url))
@@ -141,7 +141,7 @@ class RequestsTest(unittest.TestCase):
             self.assertEqual(static, 0)
             # self.assertAlmostEqual(float(res.headers['stat-req-arrival']), arrival_time)
 
-        average_dispatch = total_dispatch / float(total_reqs - error_count)
+        #average_dispatch = total_dispatch / float(total_reqs - error_count)
         #self.assertAlmostEqual(average_dispatch, expected_average_dispatch, delta=expected_average_dispatch * 0.3,
         #                       msg=f'Unexpected average dispatch time. Expected: {expected_average_dispatch}. Actual: {average_dispatch}')
         total_count = total_dyn = 0

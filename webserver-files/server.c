@@ -2,7 +2,6 @@
 #include "request.h"
 #include <pthread.h>
 #include "Queue.h"
-#include <stdbool.h>
 #include <string.h>
 #include <assert.h>
 
@@ -23,7 +22,6 @@
 #define DB(s) ;
 #endif
 
-
 typedef enum OverloadPolicy_t{
     BLOCK,
     DROP_TAIL,
@@ -36,7 +34,6 @@ pthread_mutex_t m;
 pthread_cond_t empty_cond;
 pthread_cond_t full_cond;
 
-
 void printReqFd(void* location){
     request* req_ptr = (request*)location;
     printf("%d ", req_ptr->connfd);
@@ -45,7 +42,7 @@ void printReqFd(void* location){
 #define SHOWQ(self) DB(printf(self)); DB(printf(": queue status: ")); \
     DB(doEachQ(shared_queue, printReqFd)); DB(printf("\n"));
 
-request makeRequest(int connfd, struct timeval arrival){
+request makeRequest(int connfd, double arrival){
     request res;
     res.connfd = connfd;
     res.arrival = arrival;
@@ -80,8 +77,14 @@ void getargs(int *port, int* num_threads, int* queue_size, OverloadPolicy* polic
         *policy = DROP_RAND;
 }
 
-void* consumeRequests(void* null_arg)
+void* consumeRequests(void* arg_tid)
 {
+    ThreadData thread_data;
+    thread_data.id = (intptr_t)arg_tid;
+    thread_data.num_http_handled = 0;
+    thread_data.num_dynamic_handled = 0;
+    thread_data.num_static_handled = 0;
+
     while (1) {
         pthread_mutex_lock(&m);
         while (emptyQ(shared_queue)) {
@@ -91,14 +94,17 @@ void* consumeRequests(void* null_arg)
         SHOWQ("consumeRequests: about to dequeue");
         request req = dequeueQ(shared_queue); //critical code
         SHOWQ("consumeRequests: finished dequeuing");
-        gettimeofday(&req.dispatch, NULL);
+        Gettimeofday(&req.dispatch, NULL);
 
         pthread_cond_signal(&full_cond);
         
         pthread_mutex_unlock(&m);
 
-		requestHandle(req);
-		Close(req.connfd);
+		++thread_data.num_http_handled;
+        //we might have to move the row about up, depending on if we are expected to return the number
+        // of requests handled including the one currently being handled or without including the current one. 
+		requestHandle(req, &thread_data);
+        Close(req.connfd);
     }
     return NULL;
 }
@@ -109,6 +115,7 @@ void closeRequestAt(void* location){
     Close(req_ptr->connfd);
     DB(printf("closeRequestAt: finished closing request.\n"));
 }
+
 void produceRequests(int port, OverloadPolicy policy)
 {
 	int listenfd, connfd, clientlen;
@@ -176,7 +183,7 @@ int main(int argc, char *argv[])
     
     //start all of the threads:
     for(int i = 0; i < num_threads; ++i){
-        pthread_create(threads+i, NULL, consumeRequests, NULL);
+        pthread_create(threads+i, NULL, consumeRequests, (void*)(intptr_t)i);
     }
 
     produceRequests(port, policy);

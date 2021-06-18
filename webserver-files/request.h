@@ -9,6 +9,13 @@ struct request_t{
 };
 typedef struct request_t request;
 
-void requestHandle(request req);
+typedef struct ThreadData_t {
+    int id;
+    int num_http_handled; //the number of reuqests handled by this thread.
+    int num_static_handled;
+    int num_dynamic_handled;
+} ThreadData;
+
+void requestHandle(request req, ThreadData* thread_data);
 
 #endif
