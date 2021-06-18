@@ -28,8 +28,10 @@ struct Queue_t{
 /**
  * the size of the 'should_drop' array should be the size of the queue, for each index it mark whether 
  * the item in that same index should be dropped from the queue (in relation to the initial state of 'queue').
+ * if 'do_to_each_dropped' is not NULL, 'do_to_each_dropped' will be called 
+ * on the data of every item that is removed.
  */
-static void dropAtIndices(Queue* queue, bool* should_drop){
+static void dropAtIndices(Queue* queue, bool* should_drop, void(*do_to_each_dropped)(void*)){
     CHECK_NULL(queue);
     CHECK_NULL(should_drop);
 
@@ -44,7 +46,8 @@ static void dropAtIndices(Queue* queue, bool* should_drop){
                 queue->newest = current->prior;
             else
                 current->next->prior = current->prior;
-
+            if(do_to_each_dropped != NULL)
+                do_to_each_dropped((void*)(&(current->data)));
             free(current);
             --queue->size;
         }
@@ -76,13 +79,13 @@ static int quarterRoundUp(int value){
     return value/4+1;
 }
 
-void dropRandQuarter(Queue* queue){
+void dropRandQuarter(Queue* queue, void(*do_to_each_dropped)(void*)){
     CHECK_NULL(queue);
     if(emptyQ(queue))
         return;
     bool should_drop[queue->size];
     markRandomIndices(should_drop, queue->size, quarterRoundUp(queue->size));
-    dropAtIndices(queue, should_drop);
+    dropAtIndices(queue, should_drop, do_to_each_dropped);
 }
 
 Queue* initQ(int max_size){
@@ -141,6 +144,11 @@ QueueItemType dequeueQ(Queue* queue){
     return res;
 }
 
+int numItemsQ(Queue* queue){
+    CHECK_NULL(queue);
+    return queue->size;
+}
+
 bool emptyQ(Queue* queue){
     CHECK_NULL(queue);
     return queue->size == 0;
@@ -157,10 +165,10 @@ void destroyQ(Queue* queue){
     free(queue);
 }
 
-void printQ(Queue* queue){
+void doEachQ(Queue* queue, void(*do_to_each)(void*)){
     node current = queue->newest;
     while(current != NULL){
-        printf("%d ", current->data);
+        do_to_each((void*)&current->data);
         current = current->prior;
     }
     printf("\n");

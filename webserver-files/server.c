@@ -14,14 +14,15 @@
 // Most of the work is done within routines written in request.c
 //
 
-#define DBPRINT
+//#define DBPRINT
 
 #ifdef DBPRINT
-#define YELL(s) printf(s;
+#define DB(s) s;
 #endif
 #ifndef DBPRINT
-#define YELL(s) ;
+#define DB(s) ;
 #endif
+
 
 typedef enum OverloadPolicy_t{
     BLOCK,
@@ -34,6 +35,15 @@ Queue* shared_queue;
 pthread_mutex_t m;
 pthread_cond_t empty_cond;
 pthread_cond_t full_cond;
+
+
+void printReqFd(void* location){
+    request* req_ptr = (request*)location;
+    printf("%d ", req_ptr->connfd);
+}
+
+#define SHOWQ(self) DB(printf(self)); DB(printf(": queue status: ")); \
+    DB(doEachQ(shared_queue, printReqFd)); DB(printf("\n"));
 
 request makeRequest(int connfd, struct timeval arrival){
     request res;
@@ -78,7 +88,9 @@ void* consumeRequests(void* null_arg)
             pthread_cond_wait(&empty_cond, &m);
         }
 
+        SHOWQ("consumeRequests: about to dequeue");
         request req = dequeueQ(shared_queue); //critical code
+        SHOWQ("consumeRequests: finished dequeuing");
         gettimeofday(&req.dispatch, NULL);
 
         pthread_cond_signal(&full_cond);
@@ -91,6 +103,12 @@ void* consumeRequests(void* null_arg)
     return NULL;
 }
 
+void closeRequestAt(void* location){
+    request* req_ptr = (request*)location;
+    DB(printf("closeRequestAt: closing request with connfd: %d.\n", req_ptr->connfd));
+    Close(req_ptr->connfd);
+    DB(printf("closeRequestAt: finished closing request.\n"));
+}
 void produceRequests(int port, OverloadPolicy policy)
 {
 	int listenfd, connfd, clientlen;
@@ -127,7 +145,9 @@ void produceRequests(int port, OverloadPolicy policy)
                 break;
             case DROP_RAND:
                 //a random 25% of the items in the queue are dropped:
-                dropRandQuarter(shared_queue);
+                SHOWQ("produceRequests: about to execute rand drop");
+                dropRandQuarter(shared_queue, closeRequestAt);
+                SHOWQ("produceRequests: finished executing rand drop");
                 break;
             }
         }
@@ -135,7 +155,9 @@ void produceRequests(int port, OverloadPolicy policy)
         while(fullQ(shared_queue))
             pthread_cond_wait(&full_cond, &m);
 
+        SHOWQ("produceRequests: about to add into queue")
 		enqueueQ(shared_queue, makeRequest(connfd, arrival_time)); //critical code!  (>_<)
+        SHOWQ("produceRequests: finished adding into queue")
         pthread_cond_signal(&empty_cond);
         
         pthread_mutex_unlock(&m);
