@@ -1,0 +1,31 @@
+Header: HTTP/1.0 200 OK
+Header: Server: OS-HW3 Web Server
+Header: Stat-req-arrival: 1624036530.034000
+Header: Stat-req-dispatch: 0.000000
+Header: Stat-thread-id: 0
+Header: Stat-thread-count: 2
+Header: Stat-thread-static: 1
+Header: Stat-thread-dynamic: 1
+Length = 293
+Header: Content-Length: 293
+Header: Content-Type: text/html
+<html>
+
+<head>
+  <title>OS-HW3 Test Web Page</title>
+</head>
+
+<body>
+
+<h2> OS-HW3 Test Web Page</h2>
+
+<p> Test web page: simply awesome.</p>
+
+<p> Click <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"> here</a> for something
+even more awesome.</p>
+
+</body>
+</html>
+
+
+
