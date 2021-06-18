@@ -85,6 +85,7 @@ void* consumeRequests(void* arg_tid)
 
         SHOWQ("consumeRequests: about to dequeue");
         request req = dequeueQ(shared_queue); //critical code
+        decMaxSize(shared_queue);//new
         SHOWQ("consumeRequests: finished dequeuing");
         req.dispatch = Gettimeofday();
         req.dispatch -= req.arrival;
@@ -97,6 +98,10 @@ void* consumeRequests(void* arg_tid)
         //we might have to move the row about up, depending on if we are expected to return the number
         // of requests handled including the one currently being handled or without including the current one. 
 		requestHandle(req, &thread_data);
+
+        pthread_mutex_lock(&m);//new
+        incMaxSize(shared_queue);//new
+        pthread_mutex_unlock(&m);//new
         Close(req.connfd);
     }
     return NULL;

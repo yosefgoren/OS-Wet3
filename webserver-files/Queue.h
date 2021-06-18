@@ -15,5 +15,8 @@ int numItemsQ(Queue* queue);
 void destroyQ(Queue* queue);
 void dropRandQuarter(Queue* queue, void(*do_to_each_dropped)(void*));
 void doEachQ(Queue* queue, void(*do_to_each)(void*));
+void decMaxSize(Queue* q);
+void incMaxSize(Queue* q);
+
 
 #endif

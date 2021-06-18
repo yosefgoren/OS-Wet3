@@ -1,7 +1,7 @@
 Header: HTTP/1.0 200 OK
 Header: Server: OS-HW3 Web Server
-Header: Stat-req-arrival: 1624043845.904536
-Header: Stat-req-dispatch: 0.000107
+Header: Stat-req-arrival: 1624047579.182748
+Header: Stat-req-dispatch: 0.000196
 Header: Stat-thread-id: 1
 Header: Stat-thread-count: 1
 Header: Stat-thread-static: 0

@@ -173,3 +173,12 @@ void doEachQ(Queue* queue, void(*do_to_each)(void*)){
     }
     printf("\n");
 }
+
+void decMaxSize(Queue* q){
+    --q->max_size;
+}
+
+
+void incMaxSize(Queue* q){
+    --q->max_size;
+}
