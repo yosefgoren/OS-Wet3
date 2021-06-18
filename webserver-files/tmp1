@@ -1,7 +1,0 @@
-Header: HTTP/1.0 200 OK
-Header: Server: OS-HW3 Web Server
-Header: Content-length: 123
-Header: Content-type: text/html
-<p>Welcome to the CGI program</p>
-<p>My only purpose is to waste time on the server!</p>
-<p>I spun for 3.00 seconds</p>
