@@ -1,13 +1,20 @@
 PORT=2020
-RES_FILE=t
 
-make
+./kills.sh >& /dev/null
+make > /dev/null
+
 ./server $PORT 1 1 random &
 SPID=$!
-sleep 0.05
+sleep 0.5
 
-./client localhost $PORT output.cgi &
-./client localhost $PORT output.cgi &
-./client localhost $PORT home.html &
+./client localhost $PORT output.cgi > tmp1 &
+CPID1=$!
+sleep 0.2
+./client localhost $PORT home.html > tmp2 &
+CPID2=$!
+sleep 0.2
+./client localhost $PORT home.html > tmp3
+CPID3=$!
 
+wait $CPID1 $CPID2 $CPID3
 kill $SPID
