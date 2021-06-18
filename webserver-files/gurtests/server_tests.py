@@ -188,7 +188,6 @@ class TestDropHeadRequests(RequestsTest):
     def test_drop_double_queue_size(self):
         asyncio.run(self.make_requests(self.dyn_url, self.max_reqs + self.queue_size * 2))
 
-
 class TestDropRandomRequests(RequestsTest):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, queue_size=16, policy='random', **kwargs)

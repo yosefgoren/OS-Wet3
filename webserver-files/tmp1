@@ -1,0 +1,8 @@
+Header: HTTP/1.0 404 Not found
+Header: Content-Type: text/html
+Length = 157
+Header: Content-Length: 157
+<html><title>OS-HW3 Error</title><body bgcolor=fffff>
+404: Not found
+<p>OS-HW3 Server could not find this file: ./public/not_found
+<hr>OS-HW3 Web Server

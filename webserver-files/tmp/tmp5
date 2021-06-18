@@ -1,11 +1,11 @@
 Header: HTTP/1.0 200 OK
 Header: Server: OS-HW3 Web Server
-Header: Stat-req-arrival: 1624043845.881934
-Header: Stat-req-dispatch: 0.000098
-Header: Stat-thread-id: 0
-Header: Stat-thread-count: 1
+Header: Stat-req-arrival: 1624043845.947338
+Header: Stat-req-dispatch: 0.162270
+Header: Stat-thread-id: 1
+Header: Stat-thread-count: 3
 Header: Stat-thread-static: 0
-Header: Stat-thread-dynamic: 1
+Header: Stat-thread-dynamic: 2
 Header: Content-length: 123
 Header: Content-type: text/html
 <p>Welcome to the CGI program</p>

@@ -25,6 +25,14 @@
 #include <arpa/inet.h>
 
 
+//#define DBPRINT
+#ifdef DBPRINT
+#define DB(s) s;
+#endif
+#ifndef DBPRINT
+#define DB(s) ;
+#endif
+
 /* Default file permissions are DEF_MODE & ~DEF_UMASK */
 /* $begin createmasks */
 #define DEF_MODE   S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH

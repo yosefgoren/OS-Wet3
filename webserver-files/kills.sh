@@ -1,3 +1,5 @@
+PORT=2020
+
 echo "before:"
 ps -aux | grep "[/]server 2020"
 kill $(ps -aux | grep "[/]server 2020" | awk '{print $2}')

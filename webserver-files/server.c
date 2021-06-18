@@ -13,14 +13,6 @@
 // Most of the work is done within routines written in request.c
 //
 
-//#define DBPRINT
-
-#ifdef DBPRINT
-#define DB(s) s;
-#endif
-#ifndef DBPRINT
-#define DB(s) ;
-#endif
 
 typedef enum OverloadPolicy_t{
     BLOCK,

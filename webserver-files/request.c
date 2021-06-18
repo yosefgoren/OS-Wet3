@@ -30,10 +30,14 @@ void requestError(int fd, char *cause, char *errnum, char *shortmsg, char *longm
 
    // Write out the header information for this response
    sprintf(buf, "HTTP/1.0 %s %s\r\n", errnum, shortmsg);
-   Rio_writen(fd, buf, strlen(buf));
+   //Rio_writen(fd, buf, strlen(buf));
    printf("%s", buf);
 
+   DB(printf("about to write statics from error handle\n"));
    writeStatistics(buf, req, thread_data);
+   Rio_writen(fd, buf, strlen(buf));
+   //Rio_writen(fd, buf, strlen(buf));
+
    // sprintf(buf, "%sStat-req-arrival: %f\r\n", buf, req.arrival);
    // Rio_writen(fd, buf, strlen(buf));
    // printf("%s", buf);
