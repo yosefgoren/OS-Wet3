@@ -118,9 +118,8 @@ void produceRequests(int port, OverloadPolicy policy)
 
     while (true) {	
 		clientlen = sizeof(clientaddr);
-		struct timeval arrival_time;
         connfd = Accept(listenfd, (SA *)&clientaddr, (socklen_t *) &clientlen);
-        gettimeofday(&arrival_time, NULL);
+		double arrival_time = Gettimeofday();
 
 		pthread_mutex_lock(&m);
         

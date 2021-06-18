@@ -557,4 +557,15 @@ int Open_listenfd(int port)
     return rc;
 }
 
+double Gettimeofday() 
+{
+    struct timeval t;
+    int rc = gettimeofday(&t, NULL);
+
+    if (rc == -1) {
+        app_error("gettimeofday error");
+    }
+
+    return (double) ((double)t.tv_sec + (double)t.tv_usec / 1e3);
+}
 

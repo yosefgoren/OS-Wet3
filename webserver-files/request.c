@@ -101,6 +101,22 @@ void requestGetFiletype(char *filename, char *filetype)
       strcpy(filetype, "text/plain");
 }
 
+double requestGetArrival(request req)
+{
+    struct timeval t;
+    int rc = gettimeofday(&t, NULL);
+    assert(rc == 0);
+    return (double) ((double)t.tv_sec + (double)t.tv_usec / 1e6);
+}
+
+void writeStatistics(char *buf, request req/*, statThread stat_thread*/)
+{
+   sprintf(buf, "HTTP/1.0 200 OK\r\n");
+   sprintf(buf, "%sServer: OS-HW3 Web Server\r\n", buf);
+
+   sprintf(buf, "%sStat-req-arrival: ");
+}
+
 void requestServeDynamic(int fd, char *filename, char *cgiargs)
 {
    char buf[MAXLINE], *emptylist[] = {NULL};

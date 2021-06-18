@@ -3,8 +3,8 @@
 #include <sys/time.h>
 
 struct request_t{
-    struct timeval arrival;
-    struct timeval dispatch;
+    double arrival;
+    double dispatch;
     int connfd;
 };
 typedef struct request_t request;
