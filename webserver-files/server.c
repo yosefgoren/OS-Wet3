@@ -131,6 +131,7 @@ void produceRequests(int port, OverloadPolicy policy)
         DB(printf("produceRequests: about to handle request: %d\n", connfd));
         if(policy == DROP_TAIL && !canInsertTo(shared_queue)){
             pthread_mutex_unlock(&m);
+            DB(printf("closing fd: %d.\n", connfd));
             Close(connfd);
             continue;
         }

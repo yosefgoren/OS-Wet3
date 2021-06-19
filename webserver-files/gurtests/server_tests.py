@@ -86,8 +86,10 @@ class RequestsTest(unittest.TestCase):
             r = RequestResult(req_ind=req_ind, res=response)
             return r
 
-    async def make_requests(self, url, total_reqs):
+    async def make_requests(self, url, total_reqs, caller="caller not specified"):
+        print("\n")
         print(f'Requesting url: {self.dyn_url}')
+        print("=================== caller is: "+caller+". num req: "+ str(total_reqs) +" ==========================")
         self.last_req_index = 0
         tasks = []
         fail_expected_tasks = []
@@ -172,10 +174,10 @@ class TestDropTailRequests(RequestsTest):
         super().__init__(*args, policy='dt', **kwargs)
 
     def test_drop_single(self):
-        asyncio.run(self.make_requests(self.dyn_url, self.max_reqs + 1))
+        asyncio.run(self.make_requests(self.dyn_url, self.max_reqs + 1, "test_drop_single"))
 
     def test_drop_double_queue_size(self):
-        asyncio.run(self.make_requests(self.dyn_url, self.max_reqs + self.queue_size * 2))
+        asyncio.run(self.make_requests(self.dyn_url, self.max_reqs + self.queue_size * 2, "test_drop_double_queue_size"))
 
 
 class TestDropHeadRequests(RequestsTest):
@@ -183,23 +185,23 @@ class TestDropHeadRequests(RequestsTest):
         super().__init__(*args, policy='dh', **kwargs)
 
     def test_drop_single(self):
-        asyncio.run(self.make_requests(self.dyn_url, self.max_reqs + 1))
+        asyncio.run(self.make_requests(self.dyn_url, self.max_reqs + 1, "test_drop_single"))
 
     def test_drop_double_queue_size(self):
-        asyncio.run(self.make_requests(self.dyn_url, self.max_reqs + self.queue_size * 2))
+        asyncio.run(self.make_requests(self.dyn_url, self.max_reqs + self.queue_size * 2, "test_drop_double_queue_size"))
 
 class TestDropRandomRequests(RequestsTest):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, queue_size=16, policy='random', **kwargs)
 
     def test_single_drop_random(self):
-        asyncio.run(self.make_requests(self.dyn_url, self.max_reqs + 1))
+        asyncio.run(self.make_requests(self.dyn_url, self.max_reqs + 1, "test_single_drop_random"))
 
     def test_double_drop_random(self):
-        asyncio.run(self.make_requests(self.dyn_url, self.max_reqs + 2 * int(0.25 * self.queue_size)))
+        asyncio.run(self.make_requests(self.dyn_url, self.max_reqs + 2 * int(0.25 * self.queue_size), "test_double_drop_random"))
 
     def test_no_drop(self):
-        asyncio.run(self.make_requests(self.dyn_url, self.max_reqs))
+        asyncio.run(self.make_requests(self.dyn_url, self.max_reqs, "test_no_drop"))
 
 
 class TestMultiThreaded(RequestsTest):
@@ -209,7 +211,7 @@ class TestMultiThreaded(RequestsTest):
     def test_time_full_queue(self):
         start_time = time.time()
         req_count = self.max_reqs
-        asyncio.run(self.make_requests(self.dyn_url, req_count))
+        asyncio.run(self.make_requests(self.dyn_url, req_count, "test_time_full_queue"))
         run_time = time.time() - start_time
         expected_runtime = math.ceil(req_count / float(self.thread_count)) * DYNAMIC_REQ_TIME
         # This is optimal so it must be greater
@@ -219,7 +221,7 @@ class TestMultiThreaded(RequestsTest):
     def test_better_with_more_threads(self):
         start_time = time.time()
         req_count = self.max_reqs
-        asyncio.run(self.make_requests(self.dyn_url, req_count))
+        asyncio.run(self.make_requests(self.dyn_url, req_count, "test_better_with_more_threads"))
         few_threads_run_time = time.time() - start_time
 
         self.server.terminate()
@@ -227,7 +229,7 @@ class TestMultiThreaded(RequestsTest):
         self.setUp()
 
         start_time = time.time()
-        asyncio.run(self.make_requests(self.dyn_url, req_count))
+        asyncio.run(self.make_requests(self.dyn_url, req_count, "test_better_with_more_threads"))
         more_threads_run_time = time.time() - start_time
 
         self.assertTrue(2 * more_threads_run_time < few_threads_run_time < 3 * more_threads_run_time, "Performance doesn't scale as expected with amount of threads")

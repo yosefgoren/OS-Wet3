@@ -1,13 +1,1 @@
-Header: HTTP/1.0 200 OK
-Header: Server: OS-HW3 Web Server
-Header: Stat-req-arrival: 1624102234.734849
-Header: Stat-req-dispatch: 0.074254
-Header: Stat-thread-id: 0
-Header: Stat-thread-count: 2
-Header: Stat-thread-static: 0
-Header: Stat-thread-dynamic: 2
-Header: Content-length: 123
-Header: Content-type: text/html
-<p>Welcome to the CGI program</p>
-<p>My only purpose is to waste time on the server!</p>
-<p>I spun for 0.21 seconds</p>
+Rio_readlineb error: Connection reset by peer
