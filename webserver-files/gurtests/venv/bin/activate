@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/home/student/newhw3/OS-Wet3/webserver-files/gurtests/venv"
+VIRTUAL_ENV="/home/student/hw3/OS-Wet3/webserver-files/gurtests/venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

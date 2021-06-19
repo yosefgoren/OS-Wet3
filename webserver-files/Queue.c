@@ -154,6 +154,16 @@ bool emptyQ(Queue* queue){
     return queue->size == 0;
 }
 
+bool canInsertTo(Queue* queue){
+    CHECK_NULL(queue);
+    return queue->size < queue->max_size;
+}
+
+bool canTakeFrom(Queue* queue){
+    CHECK_NULL(queue);
+    return queue->size > 0;
+}
+
 bool fullQ(Queue* queue){
     CHECK_NULL(queue);
     return queue->size == queue->max_size;

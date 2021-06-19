@@ -11,6 +11,8 @@ void enqueueQ(Queue* queue, QueueItemType item);
 QueueItemType dequeueQ(Queue* queue);
 bool emptyQ(Queue* queue);
 bool fullQ(Queue* queue);
+bool canInsertTo(Queue* queue);
+bool canTakeFrom(Queue* queue);
 int numItemsQ(Queue* queue);
 void destroyQ(Queue* queue);
 void dropRandQuarter(Queue* queue, void(*do_to_each_dropped)(void*));
