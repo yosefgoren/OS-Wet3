@@ -190,5 +190,5 @@ void decMaxSize(Queue* q){
 
 
 void incMaxSize(Queue* q){
-    --q->max_size;
+    ++q->max_size;
 }

@@ -23,8 +23,8 @@ typedef enum OverloadPolicy_t{
 
 Queue* shared_queue;
 pthread_mutex_t m;
-pthread_cond_t empty_cond;
-pthread_cond_t full_cond;
+pthread_cond_t cannot_take_cond;
+pthread_cond_t cannot_insert_cond;
 
 void printReqFd(void* location){
     request* req_ptr = (request*)location;
@@ -79,29 +79,30 @@ void* consumeRequests(void* arg_tid)
 
     while (1) {
         pthread_mutex_lock(&m);
-        while (emptyQ(shared_queue)) {
-            pthread_cond_wait(&empty_cond, &m);
+        while (!canTakeFrom(shared_queue)) {
+            pthread_cond_wait(&cannot_take_cond, &m);
         }
 
         SHOWQ("consumeRequests: about to dequeue");
-        request req = dequeueQ(shared_queue); //critical code
-        decMaxSize(shared_queue);//new
+        request req = dequeueQ(shared_queue);
+        decMaxSize(shared_queue);
         SHOWQ("consumeRequests: finished dequeuing");
         req.dispatch = Gettimeofday();
         req.dispatch -= req.arrival;
-
-        pthread_cond_signal(&full_cond);
+        
+        //OLD:
+        //pthread_cond_signal(&cannot_insert_cond);
         
         pthread_mutex_unlock(&m);
 
 		++thread_data.num_http_handled;
-        //we might have to move the row about up, depending on if we are expected to return the number
-        // of requests handled including the one currently being handled or without including the current one. 
-		requestHandle(req, &thread_data);
+        requestHandle(req, &thread_data);
 
-        pthread_mutex_lock(&m);//new
-        incMaxSize(shared_queue);//new
-        pthread_mutex_unlock(&m);//new
+        pthread_mutex_lock(&m);
+        incMaxSize(shared_queue);
+        pthread_cond_signal(&cannot_insert_cond);
+        DB(printf("consumeRequests: finished with req: %d and signaled that space is availble.\n", req.connfd));
+        pthread_mutex_unlock(&m);
         Close(req.connfd);
     }
     return NULL;
@@ -109,9 +110,9 @@ void* consumeRequests(void* arg_tid)
 
 void closeRequestAt(void* location){
     request* req_ptr = (request*)location;
-    DB(printf("closeRequestAt: closing request with connfd: %d.\n", req_ptr->connfd));
+    //DB(printf("closeRequestAt: closing request with connfd: %d.\n", req_ptr->connfd));
     Close(req_ptr->connfd);
-    DB(printf("closeRequestAt: finished closing request.\n"));
+    //DB(printf("closeRequestAt: finished closing request.\n"));
 }
 
 void produceRequests(int port, OverloadPolicy policy)
@@ -127,17 +128,18 @@ void produceRequests(int port, OverloadPolicy policy)
 		double arrival_time = Gettimeofday();
 
 		pthread_mutex_lock(&m);
-        
-        if(policy == DROP_TAIL && fullQ(shared_queue)){
+        DB(printf("produceRequests: about to handle request: %d\n", connfd));
+        if(policy == DROP_TAIL && !canInsertTo(shared_queue)){
             pthread_mutex_unlock(&m);
             Close(connfd);
             continue;
         }
 
-        if(fullQ(shared_queue)){
+        while(!canInsertTo(shared_queue)){
             switch (policy)
             {
             case BLOCK:
+                pthread_cond_wait(&cannot_insert_cond, &m);//avoiding busy wait.
                 break;
             case DROP_TAIL:
                 //this case should have been handled prior to this section.
@@ -145,24 +147,34 @@ void produceRequests(int port, OverloadPolicy policy)
                 break;
             case DROP_HEAD:
                 //the 'top' request is ignored:
-                Close(dequeueQ(shared_queue).connfd);
+                if(canTakeFrom(shared_queue))//this condition makes sure we are not in the case where the queue has 0 max_size.
+                    Close(dequeueQ(shared_queue).connfd);
+                else {//in this case the queue has a max_size of 0, so we have to wait for a worker thread to make space in the queue.
+                    DB(printf("produceReuqest: about to wait for worker threads to increase queue size.\n"));
+                    pthread_cond_wait(&cannot_insert_cond, &m);//avoiding busy wait.
+                }
                 break;
             case DROP_RAND:
                 //a random 25% of the items in the queue are dropped:
                 SHOWQ("produceRequests: about to execute rand drop");
                 dropRandQuarter(shared_queue, closeRequestAt);
                 SHOWQ("produceRequests: finished executing rand drop");
+                //if max_size is 0, 'dropRandQuarter' dropped 0 requests so we did not make any space.                
+                //in such a case we have to wait for a worker thread to increase the size of queue.
+                if(!canInsertTo(shared_queue))
+                    pthread_cond_wait(&cannot_insert_cond, &m);//avoiding busy wait.
                 break;
             }
         }
 
-        while(fullQ(shared_queue))
-            pthread_cond_wait(&full_cond, &m);
+        //OLD:
+        // while(fullQ(shared_queue))
+        //     pthread_cond_wait(&full_cond, &m);
 
         SHOWQ("produceRequests: about to add into queue")
-		enqueueQ(shared_queue, makeRequest(connfd, arrival_time)); //critical code!  (>_<)
+		enqueueQ(shared_queue, makeRequest(connfd, arrival_time));
         SHOWQ("produceRequests: finished adding into queue")
-        pthread_cond_signal(&empty_cond);
+        pthread_cond_signal(&cannot_take_cond);
         
         pthread_mutex_unlock(&m);
 	}

@@ -1,4 +1,8 @@
-PORT=2020
+if [ $# -eq 0 ] ; then
+	PORT=2020
+else
+	PORT=$1
+fi
 
 echo "before:"
 ps -aux | grep "[/]server 2020"
